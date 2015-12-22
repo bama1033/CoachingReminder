@@ -1,0 +1,485 @@
+package com.example.martin.coachingreminder;
+
+import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.support.v4.app.RemoteInput;
+import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.TextView;
+import android.widget.Toast;
+
+/**
+ * Created by Martin on 27.11.2015.
+ */
+public class QuestionSelectorActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_selector);
+
+        String question = getIntent().getStringExtra("Question");
+        final Long realdate = getIntent().getLongExtra("realDate", 1);
+        String iteration = getIntent().getStringExtra("Iteration");
+        String reply = getIntent().getStringExtra("EXTRA_VOICE_REPLY");
+        final String vtitle = getIntent().getStringExtra("Titel");
+        final String vstart =getIntent().getStringExtra("Date");
+
+
+        final Button save =(Button) findViewById(R.id.button7);
+
+        final RadioButton ryes = (RadioButton) findViewById(R.id.radioButtonx);
+        final RadioButton rno = (RadioButton) findViewById(R.id.radioButtonx2);
+        final TextView Questionfield = (TextView) findViewById(R.id.textView);
+        final TextView answerfield = (TextView) findViewById(R.id.textView16);
+        final TextView text = (TextView) findViewById(R.id.textView15);
+        final EditText etext = (EditText) findViewById(R.id.editText);
+
+        Questionfield.setText(question);
+
+        final String finalIteration = iteration;
+        final String finalQuestion = question;
+
+
+        if (iteration.equals("1")){
+            final String sd = "Q1";
+            iteration ="2";
+
+            final SharedPreferences q1 = getSharedPreferences(sd, MODE_PRIVATE);
+
+            ryes.setText("Good \uD83D\uDE00");
+            rno.setText("Bad \uD83D\uDE26");
+
+
+            final long realdatenew = realdate+ 24*60*60*1000;
+
+            question = "Could you implement the planned steps so far?";
+
+            final Intent intentAlarm = new Intent(getApplicationContext(), AlarmReciever.class);
+            intentAlarm.putExtra("Titel", vtitle);
+            intentAlarm.putExtra("Date", vstart);
+            intentAlarm.putExtra("realDate", realdatenew);
+            intentAlarm.putExtra("Iteration", iteration);
+            intentAlarm.putExtra("Question", question);
+
+
+            ryes.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (ryes.isChecked()) {
+                        rno.setChecked(false);
+                    }
+                }
+            });
+
+            rno.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (rno.isChecked()) {
+                        ryes.setChecked(false);
+                    }
+                }
+            });
+
+            save.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (ryes.isChecked()) {
+                        q1.edit().putString(sd, ryes.getText().toString()).apply();
+                        managealarm(realdate, intentAlarm);
+                        saved();
+                        sintent(getApplicationContext());
+                    }
+                    if (rno.isChecked()) {
+                        q1.edit().putString(sd, rno.getText().toString()).apply();
+                        managealarm(realdate, intentAlarm);
+                        sintent(getApplicationContext());
+                        saved();
+
+                    }
+                    else{
+                        return;
+                    }
+                }
+            });
+
+            if (reply == null) {
+                Bundle remoteInput = RemoteInput.getResultsFromIntent(getIntent());
+                if (remoteInput != null) {
+                    reply = remoteInput.getCharSequence(MobileMainActivity.EXTRA_VOICE_REPLY).toString();
+                    q1.edit().putString(sd, reply).apply(); //oder commit();=====??? commit sendet result boolen zurück, ist aber unnötig
+                    save.setEnabled(false);
+                    text.setText("Watch answer: ");
+                    answerfield.setText(reply);
+                    managealarm(realdate, intentAlarm);
+                    saved();
+                    sintent(getApplicationContext());
+                    // AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                   // alarmManager.set(AlarmManager.RTC_WAKEUP, realdate, PendingIntent.getBroadcast(getApplicationContext(), 1, intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
+                }
+            }
+        }
+
+        else if (iteration.equals("2")) {
+            final String sd = "Q2";
+            final String yiteration ="3";
+            final String niteration ="3.5";
+            final SharedPreferences q2 = getSharedPreferences(sd, MODE_PRIVATE);
+
+            ryes.setText("Yes");
+            rno.setText("No");
+
+            final String question1 = "Did the steps work out as planned?";
+            final String question2 = "What did go wrong?";
+            final Intent intentAlarm = new Intent(getApplicationContext(), AlarmReciever.class);
+            intentAlarm.putExtra("Titel", vtitle);
+            intentAlarm.putExtra("Date", vstart);
+
+            ryes.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (ryes.isChecked()) {
+                        rno.setChecked(false);
+                    }
+                }
+            });
+
+            rno.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (rno.isChecked()) {
+                        ryes.setChecked(false);
+                    }
+                }
+            });
+
+            save.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (ryes.isChecked()) {
+                        q2.edit().putString(sd, ryes.getText().toString()).apply();
+                        //TODO aufein Tag reduziert q2
+                        final long realdatenew = realdate+ 24*60*60*1000;
+                        intentAlarm.putExtra("realDate", realdatenew);
+                        intentAlarm.putExtra("Iteration", yiteration);
+                        intentAlarm.putExtra("Question", question1);
+                        managealarm(realdate, intentAlarm);
+                        sintent(getApplicationContext());
+                        saved();
+                    }
+                    if (rno.isChecked()) {
+                        q2.edit().putString(sd, rno.getText().toString()).apply();
+                        //TODO aufein Tag reduziert q2
+                        final long realdatenew = realdate+ 24*60*60*1000;
+                        intentAlarm.putExtra("realDate", realdatenew);
+                        intentAlarm.putExtra("Iteration", yiteration);
+                        intentAlarm.putExtra("Question", question1);
+                        managealarm(realdate, intentAlarm);
+                        sintent(getApplicationContext());
+                        saved();
+                    } else {
+                        return;
+                    }
+                }
+            });
+
+            if (reply == null) {
+                Bundle remoteInput = RemoteInput.getResultsFromIntent(getIntent());
+                if (remoteInput != null) {
+                    reply = remoteInput.getCharSequence(MobileMainActivity.EXTRA_VOICE_REPLY).toString();
+                    q2.edit().putString(sd, reply).apply(); //oder commit();=====??? commit sendet result boolen zurück, ist aber unnötig
+                    save.setEnabled(false);
+                    text.setText("Watch answer: ");
+                    answerfield.setText(reply);
+                   // if (reply.equals("yes") || reply.equals("Yes") || reply.equals("ja") || reply.equals("Ja")){
+                        //TODO wird ja sofort gesendet, von daher nixhts ändern?  q2
+                        final long realdatenew = realdate+ 24*60*60*1000;
+                        intentAlarm.putExtra("realDate", realdatenew);
+                        intentAlarm.putExtra("Iteration", yiteration);
+                        intentAlarm.putExtra("Question", question1);
+                        managealarm(realdate, intentAlarm);
+                        sintent(getApplicationContext());
+                    saved();
+                  //  }
+                  /*  if (reply.equals("no") || reply.equals("No") || reply.equals("Nein") || reply.equals("nein")){
+                        final long realdatenew = realdate+ 3*60*60*1000;
+                        intentAlarm.putExtra("realDate", realdate);
+                        intentAlarm.putExtra("Iteration", niteration);
+                        intentAlarm.putExtra("Question", question2);
+                        managealarm(realdate, intentAlarm);
+                    }`*/
+                }
+            }
+        }
+        else if (iteration.equals("3")){
+            final String sd = "Q3";
+            final String yiteration ="4";
+            final String niteration ="5";
+            final SharedPreferences q3 = getSharedPreferences(sd, MODE_PRIVATE);
+
+            ryes.setText("Yes");
+            rno.setText("No");
+
+            final String question1 = "How good did the steps work so far? How is ur current situation?";
+            final String question2 = "Why did the steps not work";
+            final Intent intentAlarm = new Intent(getApplicationContext(), AlarmReciever.class);
+            intentAlarm.putExtra("Titel", vtitle);
+            intentAlarm.putExtra("Date", vstart);
+
+            ryes.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (ryes.isChecked()) {
+                        rno.setChecked(false);
+                    }
+                }
+            });
+
+            rno.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (rno.isChecked()) {
+                        ryes.setChecked(false);
+                    }
+                }
+            });
+
+            save.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (ryes.isChecked()) {
+                        q3.edit().putString(sd, ryes.getText().toString()).apply();
+                        //TODO wird ja sofort gesendet, von daher nixhts ändern? Falsch komtm auf Antwort an q3
+                        final long realdatenew = realdate+ 24*60*60*1000;
+                        intentAlarm.putExtra("realDate", realdatenew);
+                        intentAlarm.putExtra("Iteration", yiteration);
+                        intentAlarm.putExtra("Question", question1);
+                        managealarm(realdate, intentAlarm);
+                        sintent(getApplicationContext());
+                    }
+                    if (rno.isChecked()) {
+                        q3.edit().putString(sd, rno.getText().toString()).apply();
+                        //TODO wird ja sofort gesendet, von daher nixhts ändern? Falsch komtm auf Antwort an q3
+                        final long realdatenew = realdate+ 24*60*60*1000;
+                        intentAlarm.putExtra("realDate", realdatenew);
+                        intentAlarm.putExtra("Iteration", niteration);
+                        intentAlarm.putExtra("Question", question2);
+                        managealarm(realdatenew, intentAlarm);
+                        sintent(getApplicationContext());
+                    } else {
+                        return;
+                    }
+                }
+            });
+
+            if (reply == null) {
+                Bundle remoteInput = RemoteInput.getResultsFromIntent(getIntent());
+                if (remoteInput != null) {
+                    reply = remoteInput.getCharSequence(MobileMainActivity.EXTRA_VOICE_REPLY).toString();
+                    q3.edit().putString(sd, reply).apply(); //oder commit();=====??? commit sendet result boolen zurück, ist aber unnötig
+                    save.setEnabled(false);
+                    text.setText("Watch answer: ");
+                    answerfield.setText(reply);
+
+                     if (reply.equals("yes") || reply.equals("Yes") || reply.equals("ja") || reply.equals("Ja")) {
+                         //TODO realdate mit new austauschen q3
+                         final long realdatenew = realdate + 24 * 60 * 60 * 1000;
+                         intentAlarm.putExtra("realDate", realdatenew);
+                         intentAlarm.putExtra("Iteration", yiteration);
+                         intentAlarm.putExtra("Question", question1);
+                         saved();
+                         managealarm(realdate, intentAlarm);
+                         sintent(getApplicationContext());
+                     }
+                    if (reply.equals("no") || reply.equals("No") || reply.equals("Nein") || reply.equals("nein")){
+                        //TODO realdate mit new austauschen 3
+                        final long realdatenew = realdate+ 10 * 1000;
+                        intentAlarm.putExtra("realDate", realdatenew);
+                        intentAlarm.putExtra("Iteration", niteration);
+                        intentAlarm.putExtra("Question", question2);
+                        saved();
+                        managealarm(realdate, intentAlarm);
+                        sintent(getApplicationContext());
+                    }
+                    else{
+                        Toast.makeText(getApplicationContext(), "Please answer with yes or no", Toast.LENGTH_LONG).show();
+                    }
+                }
+            }
+        }
+
+        else if (iteration.equals("4")){
+            final String sd = "Q4";
+            final SharedPreferences q4 = getSharedPreferences(sd, MODE_PRIVATE);
+
+            ryes.setVisibility(View.INVISIBLE);
+            rno.setVisibility(View.INVISIBLE);
+            etext.setVisibility(View.VISIBLE);
+
+
+            save.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    if (etext.equals("")){
+                        Toast.makeText(getApplicationContext(), "No notes?", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    else{
+                        q4.edit().putString(sd, etext.getText().toString()).apply();
+                        Toast.makeText(getApplicationContext(), "Thank you for participating!\uD83D\uDE00", Toast.LENGTH_SHORT).show();
+                        sintent(getApplicationContext());
+                    }
+                }
+            });
+
+            if (reply == null) {
+                Bundle remoteInput = RemoteInput.getResultsFromIntent(getIntent());
+                if (remoteInput != null) {
+                    reply = remoteInput.getCharSequence(MobileMainActivity.EXTRA_VOICE_REPLY).toString();
+                    q4.edit().putString(sd, reply).apply(); //oder commit();=====??? commit sendet result boolen zurück, ist aber unnötig
+                    save.setEnabled(false);
+                    text.setText("Watch answer: ");
+                    answerfield.setText(reply);
+                    sintent(getApplicationContext());
+                    Toast.makeText(getApplicationContext(), "Thank you for participating!\uD83D\uDE00", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+        }
+
+        else if (iteration.equals("5")){
+            final String sd = "Q5";
+            iteration ="6";
+
+            final SharedPreferences q5 = getSharedPreferences(sd, MODE_PRIVATE);
+
+            //TODO 1 Tage einf+ügen und mit realdate wechslen
+               final long realdatenew = realdate+ 24*60*60*1000;
+
+            question = "Would be another Peer-Coaching-session helpful?";
+
+            final Intent intentAlarm = new Intent(getApplicationContext(), AlarmReciever.class);
+            intentAlarm.putExtra("Titel", vtitle);
+            intentAlarm.putExtra("Date", vstart);
+            intentAlarm.putExtra("realDate", realdatenew);
+            intentAlarm.putExtra("Iteration", iteration);
+            intentAlarm.putExtra("Question", question);
+
+            ryes.setVisibility(View.INVISIBLE);
+            rno.setVisibility(View.INVISIBLE);
+            etext.setVisibility(View.VISIBLE);
+
+
+            save.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    q5.edit().putString(sd, etext.getText().toString()).apply();
+                    managealarm(realdate, intentAlarm);
+                    sintent(getApplicationContext());
+                    saved();
+                }
+            });
+
+
+            if (reply == null) {
+                Bundle remoteInput = RemoteInput.getResultsFromIntent(getIntent());
+                if (remoteInput != null) {
+                    reply = remoteInput.getCharSequence(MobileMainActivity.EXTRA_VOICE_REPLY).toString();
+                    q5.edit().putString(sd, reply).apply(); //oder commit();=====??? commit sendet result boolen zurück, ist aber unnötig
+                    save.setEnabled(false);
+                    text.setText("Watch answer: ");
+                    answerfield.setText(reply);
+                    managealarm(realdate, intentAlarm);
+                    sintent(getApplicationContext());
+                    saved();
+                }
+            }
+        }
+
+        else if (iteration.equals("6")){
+            final String sd = "Q6";
+
+            final SharedPreferences q6 = getSharedPreferences(sd, MODE_PRIVATE);
+
+            ryes.setText(" Yes\uD83D\uDE00");
+            rno.setText(" No \uD83D\uDE26");
+
+            ryes.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (ryes.isChecked()) {
+                        rno.setChecked(false);
+                    }
+                }
+            });
+
+            rno.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (rno.isChecked()) {
+                        ryes.setChecked(false);
+                    }
+                }
+            });
+
+            save.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (ryes.isChecked()) {
+                        q6.edit().putString(sd, ryes.getText().toString()).apply();
+                        Toast.makeText(getApplicationContext(), "Thank you for participating!\uD83D\uDE00", Toast.LENGTH_SHORT).show();
+                        sintent(getApplicationContext());
+                    }
+                    if (rno.isChecked()) {
+                        q6.edit().putString(sd, rno.getText().toString()).apply();
+                        Toast.makeText(getApplicationContext(), "Thank you for participating!\uD83D\uDE00", Toast.LENGTH_SHORT).show();
+                        sintent(getApplicationContext());
+                    }
+                    else{
+                        return;
+                    }
+                }
+            });
+
+            if (reply == null) {
+                Bundle remoteInput = RemoteInput.getResultsFromIntent(getIntent());
+                if (remoteInput != null) {
+                    reply = remoteInput.getCharSequence(MobileMainActivity.EXTRA_VOICE_REPLY).toString();
+                    q6.edit().putString(sd, reply).apply(); //oder commit();=====??? commit sendet result boolen zurück, ist aber unnötig
+                    save.setEnabled(false);
+                    text.setText("Watch answer: ");
+                    answerfield.setText(reply);
+                    Toast.makeText(getApplicationContext(), "Thank you for participating!\uD83D\uDE00", Toast.LENGTH_SHORT).show();
+                    sintent(getApplicationContext());
+                }
+            }
+        }
+
+
+
+    }
+    private void sintent(Context c) {
+        Intent intent = new Intent(c, MobileMainActivity.class);
+        startActivity(intent);
+    }
+
+    private void  saved(){
+    Toast.makeText(getApplicationContext(), "Answer saved in results!", Toast.LENGTH_SHORT).show();
+
+}
+    private void managealarm(Long realdate, Intent intentAlarm){
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, realdate, PendingIntent.getBroadcast(getApplicationContext(), 1, intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
+    }
+
+}
+
