@@ -2,9 +2,11 @@ package com.example.martin.coachingreminder;
 
 
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -30,7 +32,6 @@ import java.util.GregorianCalendar;
 
 public class MobileMainActivity extends AppCompatActivity {
     public static final String EXTRA_VOICE_REPLY = "extra_voice_reply";
-    private static long back_pressed;
 
     //sd
     SharedPreferences q1;
@@ -57,6 +58,7 @@ public class MobileMainActivity extends AppCompatActivity {
         final Button mButtonSearch = (Button) findViewById(R.id.button6);
 
         final EditText SearchText = (EditText) findViewById(R.id.textView1);
+        final TextView NextText = (TextView) findViewById(R.id.textView19);
         final ListView lv = (ListView) findViewById(R.id.listView);
 
 
@@ -81,6 +83,7 @@ public class MobileMainActivity extends AppCompatActivity {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //alertMessage();
                 final String vtitle = ((TextView) view.findViewById(R.id.textTitle)).getText().toString();
                 final String vstart = ((TextView) view.findViewById(R.id.textDate)).getText().toString();
 
@@ -95,7 +98,10 @@ public class MobileMainActivity extends AppCompatActivity {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                long timestamp = date.getTime();
+                long timestamp = 0;
+                if (date != null) {
+                    timestamp = date.getTime();
+                }
 
                 //   time = event_Start.getTime()+ 1000*24*60*60*1000;
                 Long notitime = new GregorianCalendar().getTimeInMillis();
@@ -113,9 +119,10 @@ public class MobileMainActivity extends AppCompatActivity {
                 AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
                 alarmManager.set(AlarmManager.RTC_WAKEUP, notitime, PendingIntent.getBroadcast(getApplicationContext(), 1, intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
                 Toast.makeText(getApplicationContext(), "Notification for the " + vstart + " has been scheduled", Toast.LENGTH_LONG).show();
-                View a = findViewById(R.id.button2);
                 //a.setEnabled(true);
                 clearSD();
+                // kann man hinzufügen
+                NextText.setText(vtitle);
                 lv.setAdapter(null);
             }
         });
@@ -139,8 +146,8 @@ public class MobileMainActivity extends AppCompatActivity {
 
         final ListView lv = (ListView) findViewById(R.id.listView);
         //  String selection ;
-        String selection = "(" + CalendarContract.Events.TITLE + " = ?)";
-        String[] selectionArgs = new String[]{x};
+        String selection = "(" + CalendarContract.Events.TITLE + " LIKE  ?)";
+        String[] selectionArgs = new String[]{"%"+x+"%" };
         try {
             // Submit the query and get a Cursor object back.
             cur = cr.query(uri, new String[]{CalendarContract.Events.CALENDAR_ID, CalendarContract.Events._ID, CalendarContract.Events.TITLE, CalendarContract.Events.DESCRIPTION, CalendarContract.Events.DTSTART, CalendarContract.Events.DTEND, CalendarContract.Events.EVENT_LOCATION}, selection, selectionArgs, null);
@@ -155,6 +162,26 @@ public class MobileMainActivity extends AppCompatActivity {
         } catch (SecurityException e) {
             Log.d("CHECK", "Permisson for Calendar not given?");
         }
+    }
+//noch entfernen
+    public void  alertMessage() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder
+                .setMessage("Are you sure?")
+                .setPositiveButton("Yes",  new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        // Yes-code
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog,int id) {
+                        dialog.cancel();
+                    }
+                })
+                .show();
     }
 
     public void onBackPressed() {

@@ -16,5 +16,14 @@
     <string name="Results">Results</string>
     <string name="NextPage">Next page</string>
     <string name="Hint">Write event title here</string>
+    <string name="WatchAnswer">Watch answer: </string>
+    <string name="ThankYou">Thank you for participating!\uD83D\uDE00</string>
+    <string name="NoNotes">No notes?</string>
+    <string name="Good">Good \uD83D\uDE00</string>
+    <string name="Bad">Bad \uD83D\uDE26</string>
+    <string name="Upcoming">Next event:</string>
+
+
+
 
 </resources>

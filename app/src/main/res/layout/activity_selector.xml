@@ -9,8 +9,6 @@
         android:layout_height="match_parent"
         android:layout_gravity="center_horizontal">
 
-
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -23,18 +21,15 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="57dp" />
 
-
-
         <Button
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Save"
             android:id="@+id/button7"
-            android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginBottom="31dp" />
+            android:layout_above="@+id/space" />
 
 
         <Button
@@ -93,6 +88,22 @@
             android:layout_alignEnd="@+id/radioButtonx2"
             android:visibility="gone"
             android:layout_above="@+id/textView15" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Medium Text"
+            android:id="@+id/textView20"
+            android:layout_centerHorizontal="true"
+            android:layout_above="@+id/space"/>
+
+        <Space
+            android:id="@+id/space"
+            android:layout_width="20px"
+            android:layout_height="20px"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="30dp" />
 
 
     </RelativeLayout>

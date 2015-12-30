@@ -27,8 +27,6 @@ public class AlarmReciever extends BroadcastReceiver {
         @Override
         public void onReceive (Context context, Intent intent){
         try {
-            String[] replyChoices1 = context.getResources().getStringArray(R.array.reply_choices1);
-            String[] replyChoices2 = context.getResources().getStringArray(R.array.reply_choices2);
 
 
 
@@ -38,8 +36,9 @@ public class AlarmReciever extends BroadcastReceiver {
             String question =  bundle.getString("Question");
             Long timestamp = bundle.getLong("realDate");
             String iteration =  bundle.getString("Iteration");
-            if  (iteration.equals("2") || iteration.equals("3")|| iteration.equals("6"))
+
             if  (iteration.equals("2") || iteration.equals("3")|| iteration.equals("6")) {
+                String[] replyChoices = context.getResources().getStringArray(R.array.reply_choices2);
 
                 Intent resultIntent = new Intent(context, QuestionSelectorActivity.class);
                 resultIntent.putExtra("Question", question);
@@ -50,7 +49,7 @@ public class AlarmReciever extends BroadcastReceiver {
 
                 RemoteInput remoteInput = new RemoteInput.Builder(MobileMainActivity.EXTRA_VOICE_REPLY)
                         .setLabel(question)
-                        .setChoices(replyChoices2)
+                        .setChoices(replyChoices)
                         .setAllowFreeFormInput(false)
                         .build();
 
@@ -84,6 +83,8 @@ public class AlarmReciever extends BroadcastReceiver {
             }
 
             else {
+                String[] replyChoices = context.getResources().getStringArray(R.array.reply_choices1);
+
                 Intent resultIntent = new Intent(context, QuestionSelectorActivity.class);
                 resultIntent.putExtra("Question", question);
                 resultIntent.putExtra("realDate", timestamp);
@@ -93,7 +94,7 @@ public class AlarmReciever extends BroadcastReceiver {
 
                 RemoteInput remoteInput = new RemoteInput.Builder(MobileMainActivity.EXTRA_VOICE_REPLY)
                         .setLabel(question)
-                        .setChoices(replyChoices1)
+                        .setChoices(replyChoices)
                                 //um speak und Emojis als Antwort zu disablen .setAllowFreeFormInput(false)
                         .build();
 

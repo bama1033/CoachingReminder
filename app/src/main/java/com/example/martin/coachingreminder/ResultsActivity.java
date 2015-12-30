@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 /**
  * Created by Martin on 12.12.2015.
@@ -35,6 +34,7 @@ public class ResultsActivity  extends AppCompatActivity {
         TextView r5 =(TextView) findViewById(R.id.textView6);
         TextView r6 =(TextView) findViewById(R.id.textView7);
         TextView a4 =(TextView) findViewById(R.id.textView2);
+
 
         String ret1 = q1.getString("Q1",null);
         String ret2 = q2.getString("Q2" ,null);
