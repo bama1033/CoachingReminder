@@ -465,8 +465,8 @@ public class QuestionSelectorActivity extends AppCompatActivity {
 
     private void  saved(){
     Toast.makeText(getApplicationContext(), "Answer saved in results!", Toast.LENGTH_SHORT).show();
+    }
 
-}
     private void managealarm(Long realdate, Intent intentAlarm){
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         alarmManager.set(AlarmManager.RTC_WAKEUP, realdate, PendingIntent.getBroadcast(getApplicationContext(), 1, intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));

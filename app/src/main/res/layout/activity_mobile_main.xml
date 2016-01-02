@@ -19,8 +19,6 @@
         android:layout_alignParentStart="true"
         android:layout_alignEnd="@+id/button" />
 
-
-
     <Button
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
@@ -29,17 +27,6 @@
         android:id="@+id/button"
         android:layout_below="@+id/button6"
         android:layout_alignParentStart="true" />
-
-
-
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/button2"
-        android:layout_alignParentBottom="true"
-        android:visibility="gone"
-        android:layout_marginBottom="50dp" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -58,11 +45,8 @@
         android:id="@+id/listView"
         android:smoothScrollbar="true"
         android:scrollIndicators="top"
-
         android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/textView1"
-        android:layout_above="@+id/button2"
-         />
+        android:layout_toEndOf="@+id/textView1" />
 
 
     <TextView
@@ -78,7 +62,6 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:id="@+id/textView9"
-        android:layout_alignBottom="@+id/button2"
         android:layout_alignParentStart="true" />
 
     <TextView
@@ -88,7 +71,8 @@
         android:text="@string/Upcoming"
         android:id="@+id/textView18"
         android:layout_centerVertical="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/button5"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -100,5 +84,22 @@
         android:layout_below="@+id/textView18"
         android:layout_alignParentStart="true" />
 
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Resend"
+        android:id="@+id/button4"
+        android:layout_below="@+id/button"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Disable"
+        android:id="@+id/button5"
+        android:layout_below="@+id/button4"
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>

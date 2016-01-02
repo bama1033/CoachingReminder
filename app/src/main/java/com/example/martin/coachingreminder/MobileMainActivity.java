@@ -67,12 +67,15 @@ public class MobileMainActivity extends AppCompatActivity {
 
 
         //buttons beschroften
-        Button mButtonResults = (Button) findViewById(R.id.button);
+        final Button mButtonResults = (Button) findViewById(R.id.button);
         final Button mButtonSearch = (Button) findViewById(R.id.button6);
+        final Button mButtonResend = (Button) findViewById(R.id.button4);
 
         final EditText SearchText = (EditText) findViewById(R.id.textView1);
         final TextView NextText = (TextView) findViewById(R.id.textView19);
         final ListView lv = (ListView) findViewById(R.id.listView);
+        String next = s1.getString("Titel", "-");
+        NextText.setText(next);
 
 
         mButtonResults.setOnClickListener(new View.OnClickListener() {
@@ -92,6 +95,32 @@ public class MobileMainActivity extends AppCompatActivity {
             }
         });
 
+        mButtonResend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String vtitle = s1.getString("Titel", null);
+                String vstart = s2.getString("Date", null);
+                Long notitime = s3.getLong("realDate", 0);
+                String iteration = s4.getString("Iteration", null);
+                String question = s5.getString("Question", null);
+
+                Intent intentAlarm = new Intent(getApplicationContext(), AlarmReciever.class);
+                intentAlarm.putExtra("Titel", vtitle);
+                intentAlarm.putExtra("Date", vstart);
+                intentAlarm.putExtra("realDate", notitime);
+                intentAlarm.putExtra("Iteration", iteration);
+                intentAlarm.putExtra("Question", question);
+
+
+                if (vtitle == null) {
+                    Toast.makeText(getApplicationContext(), "First search for an Event", Toast.LENGTH_SHORT).show();
+                }
+
+                else {
+                    new AlarmCreater().setAlarm(getApplicationContext(), intentAlarm);
+                }
+            }
+        });
         lv.setOnItemClickListener(new ListView.OnItemClickListener() {
 
             @Override
@@ -121,7 +150,6 @@ public class MobileMainActivity extends AppCompatActivity {
                 //TODO auf 1h runterstellen
                 notitime = timestamp+ 3*60*60*1000;
 
-
                 Intent intentAlarm = new Intent(getApplicationContext(), AlarmReciever.class);
                 intentAlarm.putExtra("Titel", vtitle);
                 intentAlarm.putExtra("Date", vstart);
@@ -135,9 +163,8 @@ public class MobileMainActivity extends AppCompatActivity {
                 s4.edit().putString("Iteration", iteration).apply();
                 s5.edit().putString("Question", question).apply();
 
+                new AlarmCreater().setAlarm(getApplicationContext(),intentAlarm);
 
-                AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-                alarmManager.set(AlarmManager.RTC_WAKEUP, notitime, PendingIntent.getBroadcast(getApplicationContext(), 1, intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
                 Toast.makeText(getApplicationContext(), "Notification for the " + vstart + " has been scheduled", Toast.LENGTH_LONG).show();
                 //a.setEnabled(true);
                 clearSD();
@@ -197,26 +224,7 @@ public class MobileMainActivity extends AppCompatActivity {
             Log.d("CHECK", "Permisson for Calendar not given?");
         }
     }
-//noch entfernen
-    public void  alertMessage() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        builder
-                .setMessage("Are you sure?")
-                .setPositiveButton("Yes",  new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        // Yes-code
-                    }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog,int id) {
-                        dialog.cancel();
-                    }
-                })
-                .show();
-    }
 
     public void onBackPressed() {
 

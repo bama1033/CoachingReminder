@@ -24,26 +24,20 @@ public class RebootRecieve extends BroadcastReceiver {
         final SharedPreferences s3 = context.getSharedPreferences("realDate", Context.MODE_PRIVATE);
         final SharedPreferences s4 = context.getSharedPreferences("Iteration", Context.MODE_PRIVATE);
         final SharedPreferences s5 = context.getSharedPreferences("Question", Context.MODE_PRIVATE);
-       /*
-        if(s1.getString("Titel", null).equals(null)) {
-            return;
-        }
-        else {*/
-            String vtitle = s1.getString("Titel", null);
-            String vstart = s2.getString("Date", null);
-            Long notitime = s3.getLong("realDate", 0);
-            String iteration = s4.getString("Iteration", null);
-            String question = s5.getString("Question", null);
 
-            Intent intentAlarm = new Intent(context.getApplicationContext(), AlarmReciever.class);
-            intentAlarm.putExtra("Titel", vtitle);
-            intentAlarm.putExtra("Date", vstart);
-            intentAlarm.putExtra("realDate", notitime);
-            intentAlarm.putExtra("Iteration", iteration);
-            intentAlarm.putExtra("Question", question);
+        String vtitle = s1.getString("Titel", null);
+        String vstart = s2.getString("Date", null);
+        Long notitime = s3.getLong("realDate", 0);
+        String iteration = s4.getString("Iteration", null);
+        String question = s5.getString("Question", null);
 
-            AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-            alarmManager.set(AlarmManager.RTC_WAKEUP, notitime, PendingIntent.getBroadcast(context.getApplicationContext(), 1, intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
-       // }
+        Intent intentAlarm = new Intent(context.getApplicationContext(), AlarmReciever.class);
+        intentAlarm.putExtra("Titel", vtitle);
+        intentAlarm.putExtra("Date", vstart);
+        intentAlarm.putExtra("realDate", notitime);
+        intentAlarm.putExtra("Iteration", iteration);
+        intentAlarm.putExtra("Question", question);
+
+        new AlarmCreater().setAlarm(context, intentAlarm);
     }
 }
