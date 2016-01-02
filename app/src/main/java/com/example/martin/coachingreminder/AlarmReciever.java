@@ -28,8 +28,6 @@ public class AlarmReciever extends BroadcastReceiver {
         public void onReceive (Context context, Intent intent){
         try {
 
-
-
             Bundle bundle = intent.getExtras();
             String vtitle = bundle.getString("Titel");
             String vstart = bundle.getString("Date");
@@ -126,7 +124,6 @@ public class AlarmReciever extends BroadcastReceiver {
                 int notificationId = 1;
                 notificationManager.notify(notificationId, notification);
             }
-
 
         } catch (Exception e) {
             Toast.makeText(context, "There was an error somewhere, but we still received an alarm", Toast.LENGTH_SHORT).show();

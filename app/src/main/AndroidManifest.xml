@@ -3,8 +3,8 @@
     package="com.example.martin.coachingreminder" >
 
     <uses-permission android:name="android.permission.READ_CALENDAR" />
-    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
     <uses-permission android:name="com.android.alarm.permission.SET_ALARM"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="com.android.permission.VIBRATE" />
 
     <application
@@ -21,7 +21,12 @@
         </activity>
         <activity android:name=".QuestionSelectorActivity" />
         <activity android:name=".ResultsActivity" />
-
+        <receiver android:name=".RebootRecieve">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+            </intent-filter>
+        </receiver>
         <receiver android:name=".AlarmReciever"/>
     </application>
 

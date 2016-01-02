@@ -38,7 +38,6 @@ public class QuestionSelectorActivity extends AppCompatActivity {
         final TextView Questionfield = (TextView) findViewById(R.id.textView);
         final TextView answerfield = (TextView) findViewById(R.id.textView16);
         final TextView text = (TextView) findViewById(R.id.textView15);
-        final TextView progress =(TextView) findViewById(R.id.textView20);
         final EditText etext = (EditText) findViewById(R.id.editText);
 
 
@@ -55,7 +54,6 @@ public class QuestionSelectorActivity extends AppCompatActivity {
 
                 ryes.setText(R.string.Good);
                 rno.setText(R.string.Bad);
-
 
                 final long realdatenew = realdate + 24 * 60 * 60 * 1000;
 

@@ -41,6 +41,12 @@ public class MobileMainActivity extends AppCompatActivity {
     SharedPreferences q5;
     SharedPreferences q6;
 
+    SharedPreferences s1;
+    SharedPreferences s2 ;
+    SharedPreferences s3 ;
+    SharedPreferences s4 ;
+    SharedPreferences s5;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +58,13 @@ public class MobileMainActivity extends AppCompatActivity {
         q4 = getSharedPreferences("Q4", MODE_PRIVATE);
         q5 = getSharedPreferences("Q5", MODE_PRIVATE);
         q6 = getSharedPreferences("Q6", MODE_PRIVATE);
+
+        final SharedPreferences s1 = getSharedPreferences("Titel", MODE_PRIVATE);
+        final SharedPreferences s2 = getSharedPreferences("Date", MODE_PRIVATE);
+        final SharedPreferences s3 = getSharedPreferences("realDate", MODE_PRIVATE);
+        final SharedPreferences s4 = getSharedPreferences("Iteration", MODE_PRIVATE);
+        final SharedPreferences s5 = getSharedPreferences("Question", MODE_PRIVATE);
+
 
         //buttons beschroften
         Button mButtonResults = (Button) findViewById(R.id.button);
@@ -116,6 +129,13 @@ public class MobileMainActivity extends AppCompatActivity {
                 intentAlarm.putExtra("Iteration", iteration);
                 intentAlarm.putExtra("Question", question);
 
+                s1.edit().putString("Titel", vtitle).apply();
+                s2.edit().putString("Date", vstart).apply();
+                s3.edit().putLong("realDate", notitime).apply();
+                s4.edit().putString("Iteration", iteration).apply();
+                s5.edit().putString("Question", question).apply();
+
+
                 AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
                 alarmManager.set(AlarmManager.RTC_WAKEUP, notitime, PendingIntent.getBroadcast(getApplicationContext(), 1, intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
                 Toast.makeText(getApplicationContext(), "Notification for the " + vstart + " has been scheduled", Toast.LENGTH_LONG).show();
@@ -129,16 +149,30 @@ public class MobileMainActivity extends AppCompatActivity {
     }
 
     private void clearSD() {
-        String clear="";
-        q1.edit().putString("Q1", clear).apply();
+        q1.edit().remove("Q1").commit();
+        q2.edit().remove("Q2").commit();
+        q3.edit().remove("Q3").commit();
+        q4.edit().remove("Q4").commit();
+        q5.edit().remove("Q5").commit();
+        q6.edit().remove("Q6").commit();
+       // String clear="";
+      /*  q1.edit().putString("Q1", clear).apply();
         q2.edit().putString("Q2", clear).apply();
         q3.edit().putString("Q3", clear).apply();
         q4.edit().putString("Q4", clear).apply();
         q5.edit().putString("Q5", clear).apply();
-        q6.edit().putString("Q6", clear).apply();
+        q6.edit().putString("Q6", clear).apply();*/
+    }
+    private void clearSDs(){
+        String clear="";
+        s1.edit().putString("Titel", clear).apply();
+        s2.edit().putString("Date", clear).apply();
+        s3.edit().putString("realDate", clear).apply();
+        s4.edit().putString("Iteration", clear).apply();
+        s5.edit().putString("Question", clear).apply();
     }
 
-    private void populatelistview(String x) {
+    private void populatelistview(String input) {
 
         final Cursor cur;
         ContentResolver cr = getContentResolver();
@@ -147,19 +181,19 @@ public class MobileMainActivity extends AppCompatActivity {
         final ListView lv = (ListView) findViewById(R.id.listView);
         //  String selection ;
         String selection = "(" + CalendarContract.Events.TITLE + " LIKE  ?)";
-        String[] selectionArgs = new String[]{"%"+x+"%" };
+        String[] selectionArgs = new String[]{"%"+input+"%" };
         try {
             // Submit the query and get a Cursor object back.
-            cur = cr.query(uri, new String[]{CalendarContract.Events.CALENDAR_ID, CalendarContract.Events._ID, CalendarContract.Events.TITLE, CalendarContract.Events.DESCRIPTION, CalendarContract.Events.DTSTART, CalendarContract.Events.DTEND, CalendarContract.Events.EVENT_LOCATION}, selection, selectionArgs, null);
+            cur = cr.query(uri, null, selection, selectionArgs, CalendarContract.Events.DTSTART+ " DESC");
 
             lv.setAdapter(new MyAdapter(getApplicationContext(), cur));
             int y =lv.getCount();
-
             if (y == 0){
                 Toast.makeText(getApplicationContext(), "No events found", Toast.LENGTH_SHORT).show();
             }
 
         } catch (SecurityException e) {
+            Toast.makeText(getApplicationContext(), "Permisson for Calendar not given?", Toast.LENGTH_LONG).show();
             Log.d("CHECK", "Permisson for Calendar not given?");
         }
     }
