@@ -21,13 +21,13 @@
         </activity>
         <activity android:name=".QuestionSelectorActivity" />
         <activity android:name=".ResultsActivity" />
-        <receiver android:name=".RebootRecieve">
+        <receiver android:name=".RebootReciever" android:enabled="false">>
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
                 <action android:name="android.intent.action.QUICKBOOT_POWERON" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".AlarmReciever"/>
+        <receiver android:name=".AlarmReciever" android:enabled="false"/>
     </application>
 
 </manifest>

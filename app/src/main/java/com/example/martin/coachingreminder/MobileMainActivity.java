@@ -2,11 +2,7 @@ package com.example.martin.coachingreminder;
 
 
 import android.app.AlarmManager;
-import android.app.AlertDialog;
-import android.app.PendingIntent;
 import android.content.ContentResolver;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -32,7 +28,7 @@ import java.util.GregorianCalendar;
 
 public class MobileMainActivity extends AppCompatActivity {
     public static final String EXTRA_VOICE_REPLY = "extra_voice_reply";
-
+    private AlarmManager alarmMgr;
     //sd
     SharedPreferences q1;
     SharedPreferences q2 ;
@@ -46,6 +42,7 @@ public class MobileMainActivity extends AppCompatActivity {
     SharedPreferences s3 ;
     SharedPreferences s4 ;
     SharedPreferences s5;
+    SharedPreferences f1;
 
 
     @Override
@@ -70,6 +67,7 @@ public class MobileMainActivity extends AppCompatActivity {
         final Button mButtonResults = (Button) findViewById(R.id.button);
         final Button mButtonSearch = (Button) findViewById(R.id.button6);
         final Button mButtonResend = (Button) findViewById(R.id.button4);
+        final Button mButtonDelete = (Button) findViewById(R.id.button5);
 
         final EditText SearchText = (EditText) findViewById(R.id.textView1);
         final TextView NextText = (TextView) findViewById(R.id.textView19);
@@ -117,10 +115,21 @@ public class MobileMainActivity extends AppCompatActivity {
                 }
 
                 else {
-                    new AlarmCreater().setAlarm(getApplicationContext(), intentAlarm);
+                    new HelperClass().setAlarm(getApplicationContext(), intentAlarm);
                 }
             }
         });
+
+        mButtonDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            clearSD();
+                clearSDs();
+                Toast.makeText(getApplicationContext(), "Current events deleted", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
         lv.setOnItemClickListener(new ListView.OnItemClickListener() {
 
             @Override
@@ -148,7 +157,7 @@ public class MobileMainActivity extends AppCompatActivity {
                 //   time = event_Start.getTime()+ 1000*24*60*60*1000;
                 Long notitime = new GregorianCalendar().getTimeInMillis();
                 //TODO auf 1h runterstellen
-                notitime = timestamp+ 3*60*60*1000;
+                notitime = timestamp + 3 * 60 * 60 * 1000;
 
                 Intent intentAlarm = new Intent(getApplicationContext(), AlarmReciever.class);
                 intentAlarm.putExtra("Titel", vtitle);
@@ -163,40 +172,53 @@ public class MobileMainActivity extends AppCompatActivity {
                 s4.edit().putString("Iteration", iteration).apply();
                 s5.edit().putString("Question", question).apply();
 
-                new AlarmCreater().setAlarm(getApplicationContext(),intentAlarm);
+                new HelperClass().setAlarm(getApplicationContext(), intentAlarm);
 
                 Toast.makeText(getApplicationContext(), "Notification for the " + vstart + " has been scheduled", Toast.LENGTH_LONG).show();
                 //a.setEnabled(true);
                 clearSD();
                 // kann man hinzufügen
                 NextText.setText(vtitle);
+                new HelperClass().enableReceiver(getApplicationContext());
                 lv.setAdapter(null);
             }
         });
     }
 
     private void clearSD() {
-        q1.edit().remove("Q1").commit();
-        q2.edit().remove("Q2").commit();
-        q3.edit().remove("Q3").commit();
-        q4.edit().remove("Q4").commit();
-        q5.edit().remove("Q5").commit();
-        q6.edit().remove("Q6").commit();
-       // String clear="";
-      /*  q1.edit().putString("Q1", clear).apply();
-        q2.edit().putString("Q2", clear).apply();
-        q3.edit().putString("Q3", clear).apply();
-        q4.edit().putString("Q4", clear).apply();
-        q5.edit().putString("Q5", clear).apply();
-        q6.edit().putString("Q6", clear).apply();*/
+        SharedPreferences.Editor editor1 = q1.edit();
+        editor1.clear().commit();
+        SharedPreferences.Editor editor2 = q2.edit();
+        editor2.clear().commit();
+        SharedPreferences.Editor editor3 = q3.edit();
+        editor3.clear().commit();
+        SharedPreferences.Editor editor4 = q4.edit();
+        editor4.clear().commit();
+        SharedPreferences.Editor editor5 = q5.edit();
+        editor5.clear().commit();
+        SharedPreferences.Editor editor6 = q6.edit();
+        editor6.clear().commit();
     }
+
     private void clearSDs(){
-        String clear="";
-        s1.edit().putString("Titel", clear).apply();
-        s2.edit().putString("Date", clear).apply();
-        s3.edit().putString("realDate", clear).apply();
-        s4.edit().putString("Iteration", clear).apply();
-        s5.edit().putString("Question", clear).apply();
+      //  final SharedPreferences f1 = getSharedPreferences("F1", MODE_PRIVATE);
+        final SharedPreferences s1 = getSharedPreferences("Titel", MODE_PRIVATE);
+        final SharedPreferences s2 = getSharedPreferences("Date", MODE_PRIVATE);
+        final SharedPreferences s3 = getSharedPreferences("realDate", MODE_PRIVATE);
+        final SharedPreferences s4 = getSharedPreferences("Iteration", MODE_PRIVATE);
+        final SharedPreferences s5 = getSharedPreferences("Question", MODE_PRIVATE);
+        SharedPreferences.Editor editor1 = s1.edit();
+        editor1.clear().commit();
+        SharedPreferences.Editor editor2 = s2.edit();
+        editor2.clear().commit();
+        SharedPreferences.Editor editor3 = s3.edit();
+        editor3.clear().commit();
+        SharedPreferences.Editor editor4 = s4.edit();
+        editor4.clear().commit();
+        SharedPreferences.Editor editor5 = s5.edit();
+        editor5.clear().commit();
+
+        new HelperClass().disableReceiver(getApplicationContext());
     }
 
     private void populatelistview(String input) {

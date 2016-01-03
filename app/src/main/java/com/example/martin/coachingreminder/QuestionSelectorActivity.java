@@ -17,11 +17,22 @@ import android.widget.Toast;
 
 
 public class QuestionSelectorActivity extends AppCompatActivity {
+    SharedPreferences s1;
+    SharedPreferences s2 ;
+    SharedPreferences s3 ;
+    SharedPreferences s4 ;
+    SharedPreferences s5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_selector);
+
+        final SharedPreferences s1 = getSharedPreferences("Titel", MODE_PRIVATE);
+        final SharedPreferences s2 = getSharedPreferences("Date", MODE_PRIVATE);
+        final SharedPreferences s3 = getSharedPreferences("realDate", MODE_PRIVATE);
+        final SharedPreferences s4 = getSharedPreferences("Iteration", MODE_PRIVATE);
+        final SharedPreferences s5 = getSharedPreferences("Question", MODE_PRIVATE);
 
         String question = getIntent().getStringExtra("Question");
         final Long realdate = getIntent().getLongExtra("realDate", 1);
@@ -90,15 +101,11 @@ public class QuestionSelectorActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         if (ryes.isChecked()) {
                             q1.edit().putString(sd, ryes.getText().toString()).apply();
-                            managealarm(realdate, intentAlarm);
-                            saved();
-                            sintent(getApplicationContext());
+                            allmethods(intentAlarm, realdate);
                         }
                         if (rno.isChecked()) {
                             q1.edit().putString(sd, rno.getText().toString()).apply();
-                            managealarm(realdate, intentAlarm);
-                            sintent(getApplicationContext());
-                            saved();
+                            allmethods(intentAlarm, realdate);
                         }
                     }
                 });
@@ -108,14 +115,9 @@ public class QuestionSelectorActivity extends AppCompatActivity {
                     if (remoteInput != null) {
                         reply = remoteInput.getCharSequence(MobileMainActivity.EXTRA_VOICE_REPLY).toString();
                         q1.edit().putString(sd, reply).apply(); //oder commit();=====??? commit sendet result boolen zurück, ist aber unnötig
-                        save.setEnabled(false);
                         text.setText("Watch answer: ");
                         answerfield.setText(reply);
-                        managealarm(realdate, intentAlarm);
-                        saved();
-                        sintent(getApplicationContext());
-                        // AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-                        // alarmManager.set(AlarmManager.RTC_WAKEUP, realdate, PendingIntent.getBroadcast(getApplicationContext(), 1, intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
+                        allmethods(intentAlarm, realdate);
                     }
                 }
                 break;
@@ -164,9 +166,7 @@ public class QuestionSelectorActivity extends AppCompatActivity {
                             intentAlarm.putExtra("realDate", realdatenew);
                             intentAlarm.putExtra("Iteration", yiteration);
                             intentAlarm.putExtra("Question", question1);
-                            managealarm(realdate, intentAlarm);
-                            sintent(getApplicationContext());
-                            saved();
+                            allmethods(intentAlarm, realdate);
                         }
                         if (rno.isChecked()) {
                             q2.edit().putString(sd, rno.getText().toString()).apply();
@@ -175,9 +175,7 @@ public class QuestionSelectorActivity extends AppCompatActivity {
                             intentAlarm.putExtra("realDate", realdatenew);
                             intentAlarm.putExtra("Iteration", yiteration);
                             intentAlarm.putExtra("Question", question1);
-                            managealarm(realdate, intentAlarm);
-                            sintent(getApplicationContext());
-                            saved();
+                            allmethods(intentAlarm, realdate);
                         }
                     }
                 });
@@ -255,8 +253,7 @@ public class QuestionSelectorActivity extends AppCompatActivity {
                             intentAlarm.putExtra("realDate", realdatenew);
                             intentAlarm.putExtra("Iteration", yiteration);
                             intentAlarm.putExtra("Question", question1);
-                            managealarm(realdate, intentAlarm);
-                            sintent(getApplicationContext());
+                            allmethods(intentAlarm, realdate);
                         }
                         if (rno.isChecked()) {
                             q3.edit().putString(sd, rno.getText().toString()).apply();
@@ -265,8 +262,7 @@ public class QuestionSelectorActivity extends AppCompatActivity {
                             intentAlarm.putExtra("realDate", realdatenew);
                             intentAlarm.putExtra("Iteration", niteration);
                             intentAlarm.putExtra("Question", question2);
-                            managealarm(realdatenew, intentAlarm);
-                            sintent(getApplicationContext());
+                            allmethods(intentAlarm, realdate);
                         }
                     }
                 });
@@ -286,9 +282,7 @@ public class QuestionSelectorActivity extends AppCompatActivity {
                             intentAlarm.putExtra("realDate", realdatenew);
                             intentAlarm.putExtra("Iteration", yiteration);
                             intentAlarm.putExtra("Question", question1);
-                            saved();
-                            managealarm(realdate, intentAlarm);
-                            sintent(getApplicationContext());
+                            allmethods(intentAlarm, realdate);
                         }
                         if (reply.equals("no") || reply.equals("No") || reply.equals("Nein") || reply.equals("nein")) {
                             //TODO realdate mit new austauschen 3
@@ -296,9 +290,7 @@ public class QuestionSelectorActivity extends AppCompatActivity {
                             intentAlarm.putExtra("realDate", realdatenew);
                             intentAlarm.putExtra("Iteration", niteration);
                             intentAlarm.putExtra("Question", question2);
-                            saved();
-                            managealarm(realdate, intentAlarm);
-                            sintent(getApplicationContext());
+                            allmethods(intentAlarm, realdate);
                         } else {
                             Toast.makeText(getApplicationContext(), "Please answer with yes or no", Toast.LENGTH_LONG).show();
                         }
@@ -325,6 +317,7 @@ public class QuestionSelectorActivity extends AppCompatActivity {
                         } else {
                             q4.edit().putString(sd, etext.getText().toString()).apply();
                             Toast.makeText(getApplicationContext(), R.string.ThankYou, Toast.LENGTH_SHORT).show();
+                            clearsds();
                             sintent(getApplicationContext());
                         }
                     }
@@ -340,6 +333,7 @@ public class QuestionSelectorActivity extends AppCompatActivity {
                         answerfield.setText(reply);
                         sintent(getApplicationContext());
                         Toast.makeText(getApplicationContext(), R.string.ThankYou, Toast.LENGTH_SHORT).show();
+                        clearsds();
                     }
                 }
 
@@ -428,11 +422,13 @@ public class QuestionSelectorActivity extends AppCompatActivity {
                         if (ryes.isChecked()) {
                             q6.edit().putString(sd, ryes.getText().toString()).apply();
                             Toast.makeText(getApplicationContext(), R.string.ThankYou, Toast.LENGTH_SHORT).show();
+                            clearsds();
                             sintent(getApplicationContext());
                         }
                         if (rno.isChecked()) {
                             q6.edit().putString(sd, rno.getText().toString()).apply();
                             Toast.makeText(getApplicationContext(), R.string.ThankYou, Toast.LENGTH_SHORT).show();
+                            clearsds();
                             sintent(getApplicationContext());
                         }
                     }
@@ -447,6 +443,7 @@ public class QuestionSelectorActivity extends AppCompatActivity {
                         text.setText(R.string.WatchAnswer);
                         answerfield.setText(reply);
                         Toast.makeText(getApplicationContext(), R.string.ThankYou, Toast.LENGTH_SHORT).show();
+                        clearsds();
                         sintent(getApplicationContext());
                     }
                 }
@@ -472,5 +469,54 @@ public class QuestionSelectorActivity extends AppCompatActivity {
         alarmManager.set(AlarmManager.RTC_WAKEUP, realdate, PendingIntent.getBroadcast(getApplicationContext(), 1, intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
     }
 
+    private void  savesds(Intent intentAlarm){
+
+        Bundle bundle = intentAlarm.getExtras();
+        String vtitle = bundle.getString("Titel");
+        String vstart = bundle.getString("Date");
+        String question =  bundle.getString("Question");
+        Long timestamp = bundle.getLong("realDate");
+        String iteration =  bundle.getString("Iteration");
+
+        final SharedPreferences s1 = getSharedPreferences("Titel", MODE_PRIVATE);
+        final SharedPreferences s2 = getSharedPreferences("Date", MODE_PRIVATE);
+        final SharedPreferences s3 = getSharedPreferences("realDate", MODE_PRIVATE);
+        final SharedPreferences s4 = getSharedPreferences("Iteration", MODE_PRIVATE);
+        final SharedPreferences s5 = getSharedPreferences("Question", MODE_PRIVATE);
+
+        s1.edit().putString("Titel", vtitle).apply();
+        s2.edit().putString("Date", vstart).apply();
+        s3.edit().putLong("realDate", timestamp).apply();
+        s4.edit().putString("Iteration", iteration).apply();
+        s5.edit().putString("Question", question).apply();
+    }
+
+    private void allmethods(Intent intentAlarm, Long realdate){
+        savesds(intentAlarm);
+        managealarm(realdate, intentAlarm);
+        saved();
+        sintent(getApplicationContext());
+    }
+    //clears lastnoti sds and disables receiver
+    private  void clearsds(){
+        final SharedPreferences s1 = getSharedPreferences("Titel", MODE_PRIVATE);
+        final SharedPreferences s2 = getSharedPreferences("Date", MODE_PRIVATE);
+        final SharedPreferences s3 = getSharedPreferences("realDate", MODE_PRIVATE);
+        final SharedPreferences s4 = getSharedPreferences("Iteration", MODE_PRIVATE);
+        final SharedPreferences s5 = getSharedPreferences("Question", MODE_PRIVATE);
+        SharedPreferences.Editor editor1 = s1.edit();
+        editor1.clear().commit();
+        SharedPreferences.Editor editor2 = s2.edit();
+        editor2.clear().commit();
+        SharedPreferences.Editor editor3 = s3.edit();
+        editor3.clear().commit();
+        SharedPreferences.Editor editor4 = s4.edit();
+        editor4.clear().commit();
+        SharedPreferences.Editor editor5 = s5.edit();
+        editor5.clear().commit();
+
+        new HelperClass().disableReceiver(getApplicationContext());
+
+    }
 }
 

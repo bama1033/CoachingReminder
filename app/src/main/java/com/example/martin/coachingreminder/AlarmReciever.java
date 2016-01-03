@@ -68,7 +68,6 @@ public class AlarmReciever extends BroadcastReceiver {
                                 .extend(new NotificationCompat.WearableExtender().addAction(action))
                                 .setContentIntent(PendingIntenta)
                                 .setVibrate(pattern)
-                                .setOngoing(true)
                                 .setAutoCancel(true)
                                 .build();
 
@@ -113,7 +112,6 @@ public class AlarmReciever extends BroadcastReceiver {
                                 .extend(new NotificationCompat.WearableExtender().addAction(action))
                                 .setContentIntent(PendingIntenta)
                                 .setVibrate(pattern)
-                                .setOngoing(true)
                                 .setAutoCancel(true)
                                 .build();
 
@@ -128,7 +126,6 @@ public class AlarmReciever extends BroadcastReceiver {
         } catch (Exception e) {
             Toast.makeText(context, "There was an error somewhere, but we still received an alarm", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
-
         }
     }
 }

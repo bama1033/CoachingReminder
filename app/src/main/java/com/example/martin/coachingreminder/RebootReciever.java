@@ -1,21 +1,18 @@
 package com.example.martin.coachingreminder;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.util.Log;
 
-import java.util.GregorianCalendar;
-
-public class RebootRecieve extends BroadcastReceiver {
+public class RebootReciever extends BroadcastReceiver {
 
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        scheduleAlarms(context.getApplicationContext());
+        if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED")||intent.getAction().equals("android.intent.action.QUICKBOOT_POWERON")) {
+            scheduleAlarms(context.getApplicationContext());
+        }
     }
 
     private void scheduleAlarms(Context context) {
@@ -38,6 +35,6 @@ public class RebootRecieve extends BroadcastReceiver {
         intentAlarm.putExtra("Iteration", iteration);
         intentAlarm.putExtra("Question", question);
 
-        new AlarmCreater().setAlarm(context, intentAlarm);
+        new HelperClass().setAlarm(context, intentAlarm);
     }
 }

@@ -144,6 +144,22 @@
         android:layout_width="1dp"
         android:layout_height="30dp"/>
 
+    <Space
+        android:layout_width="1dp"
+        android:layout_height="30dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Additional Freetext:"
+        android:id="@+id/textView21"
+        android:layout_gravity="center_horizontal" />
+
+    <Space
+        android:layout_width="1dp"
+        android:layout_height="30dp"/>
+
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -153,10 +169,18 @@
     <Space
         android:layout_width="1dp"
         android:layout_height="30dp"/>
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save text"
+        android:id="@+id/button2"
+        android:layout_gravity="right" />
+
     <Space
         android:layout_width="1dp"
         android:layout_height="30dp"/>
-
 
 
 </LinearLayout>
