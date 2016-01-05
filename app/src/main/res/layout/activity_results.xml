@@ -84,7 +84,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="4. How good did the steps work so far? How is ur current situation?"
+        android:text="4a. How good did the steps work so far? How is ur current situation?"
         android:id="@+id/textView2"
         android:layout_gravity="center_horizontal"
         android:gravity="center" />
@@ -106,7 +106,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="5. Why did the steps not work"
+        android:text="4b. Why did the steps not work"
         android:id="@+id/textView13"
         android:layout_gravity="center_horizontal"
         android:gravity="center"/>
@@ -128,7 +128,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="6. Would be another session helpful?"
+        android:text="5. Would be another session helpful?"
         android:id="@+id/textView14"
         android:layout_gravity="center_horizontal"
         android:gravity="center"/>

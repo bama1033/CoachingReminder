@@ -12,7 +12,7 @@
 
     <string name="Yes">Yes</string>
     <string name="No">No</string>
-    <string name="Search">Search</string>
+    <string name="Search">Search Event</string>
     <string name="Results">Results</string>
     <string name="NextPage">Next page</string>
     <string name="Hint">Write event title here</string>
@@ -21,7 +21,7 @@
     <string name="NoNotes">No notes?</string>
     <string name="Good">Good \uD83D\uDE00</string>
     <string name="Bad">Bad \uD83D\uDE26</string>
-    <string name="Upcoming">Current event:</string>
+    <string name="Upcoming">Next reminder:</string>
 
 
 

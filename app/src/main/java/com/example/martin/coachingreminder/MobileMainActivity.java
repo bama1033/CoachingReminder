@@ -1,14 +1,14 @@
 package com.example.martin.coachingreminder;
 
-
-import android.app.AlarmManager;
 import android.content.ContentResolver;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.CalendarContract;
 
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -28,26 +28,19 @@ import java.util.GregorianCalendar;
 
 public class MobileMainActivity extends AppCompatActivity {
     public static final String EXTRA_VOICE_REPLY = "extra_voice_reply";
-    private AlarmManager alarmMgr;
+    long mBackPressed;
     //sd
     SharedPreferences q1;
-    SharedPreferences q2 ;
-    SharedPreferences q3 ;
-    SharedPreferences q4 ;
+    SharedPreferences q2;
+    SharedPreferences q3;
+    SharedPreferences q4;
     SharedPreferences q5;
     SharedPreferences q6;
-
-    SharedPreferences s1;
-    SharedPreferences s2 ;
-    SharedPreferences s3 ;
-    SharedPreferences s4 ;
-    SharedPreferences s5;
-    SharedPreferences f1;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_mobile_main);
         q1 = getSharedPreferences("Q1", MODE_PRIVATE);
         q2 = getSharedPreferences("Q2", MODE_PRIVATE);
@@ -62,8 +55,6 @@ public class MobileMainActivity extends AppCompatActivity {
         final SharedPreferences s4 = getSharedPreferences("Iteration", MODE_PRIVATE);
         final SharedPreferences s5 = getSharedPreferences("Question", MODE_PRIVATE);
 
-
-        //buttons beschroften
         final Button mButtonResults = (Button) findViewById(R.id.button);
         final Button mButtonSearch = (Button) findViewById(R.id.button6);
         final Button mButtonResend = (Button) findViewById(R.id.button4);
@@ -72,9 +63,7 @@ public class MobileMainActivity extends AppCompatActivity {
         final EditText SearchText = (EditText) findViewById(R.id.textView1);
         final TextView NextText = (TextView) findViewById(R.id.textView19);
         final ListView lv = (ListView) findViewById(R.id.listView);
-        String next = s1.getString("Titel", "-");
-        NextText.setText(next);
-
+        setNext(NextText);
 
         mButtonResults.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,7 +77,7 @@ public class MobileMainActivity extends AppCompatActivity {
         mButtonSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String x =SearchText.getText().toString();
+                String x = SearchText.getText().toString();
                 populatelistview(x);
             }
         });
@@ -112,10 +101,9 @@ public class MobileMainActivity extends AppCompatActivity {
 
                 if (vtitle == null) {
                     Toast.makeText(getApplicationContext(), "First search for an Event", Toast.LENGTH_SHORT).show();
-                }
-
-                else {
+                } else {
                     new HelperClass().setAlarm(getApplicationContext(), intentAlarm);
+                    Toast.makeText(getApplicationContext(), "Alarm has been reset!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -123,10 +111,22 @@ public class MobileMainActivity extends AppCompatActivity {
         mButtonDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            clearSD();
-                clearSDs();
-                Toast.makeText(getApplicationContext(), "Current events deleted", Toast.LENGTH_SHORT).show();
 
+                if (mBackPressed + 6000 > System.currentTimeMillis()) {
+                    clearSD();
+                    clearSDs();
+                    Toast.makeText(getBaseContext(),
+                            "Current event and results deleted!", Toast.LENGTH_SHORT)
+                            .show();
+                    setNext(NextText);
+                    return;
+
+                } else {
+                    Toast.makeText(getBaseContext(),
+                            "Press again to delete current event and results!", Toast.LENGTH_SHORT)
+                            .show();
+                }
+                mBackPressed = System.currentTimeMillis();
             }
         });
 
@@ -134,7 +134,6 @@ public class MobileMainActivity extends AppCompatActivity {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //alertMessage();
                 final String vtitle = ((TextView) view.findViewById(R.id.textTitle)).getText().toString();
                 final String vstart = ((TextView) view.findViewById(R.id.textDate)).getText().toString();
 
@@ -178,7 +177,7 @@ public class MobileMainActivity extends AppCompatActivity {
                 //a.setEnabled(true);
                 clearSD();
                 // kann man hinzufügen
-                NextText.setText(vtitle);
+                setNext(NextText);
                 new HelperClass().enableReceiver(getApplicationContext());
                 lv.setAdapter(null);
             }
@@ -200,8 +199,8 @@ public class MobileMainActivity extends AppCompatActivity {
         editor6.clear().commit();
     }
 
-    private void clearSDs(){
-      //  final SharedPreferences f1 = getSharedPreferences("F1", MODE_PRIVATE);
+    private void clearSDs() {
+        //  final SharedPreferences f1 = getSharedPreferences("F1", MODE_PRIVATE);
         final SharedPreferences s1 = getSharedPreferences("Titel", MODE_PRIVATE);
         final SharedPreferences s2 = getSharedPreferences("Date", MODE_PRIVATE);
         final SharedPreferences s3 = getSharedPreferences("realDate", MODE_PRIVATE);
@@ -230,14 +229,14 @@ public class MobileMainActivity extends AppCompatActivity {
         final ListView lv = (ListView) findViewById(R.id.listView);
         //  String selection ;
         String selection = "(" + CalendarContract.Events.TITLE + " LIKE  ?)";
-        String[] selectionArgs = new String[]{"%"+input+"%" };
+        String[] selectionArgs = new String[]{"%" + input + "%"};
         try {
             // Submit the query and get a Cursor object back.
-            cur = cr.query(uri, null, selection, selectionArgs, CalendarContract.Events.DTSTART+ " DESC");
+            cur = cr.query(uri, null, selection, selectionArgs, CalendarContract.Events.DTSTART + " DESC");
 
             lv.setAdapter(new MyAdapter(getApplicationContext(), cur));
-            int y =lv.getCount();
-            if (y == 0){
+            int y = lv.getCount();
+            if (y == 0) {
                 Toast.makeText(getApplicationContext(), "No events found", Toast.LENGTH_SHORT).show();
             }
 
@@ -249,7 +248,30 @@ public class MobileMainActivity extends AppCompatActivity {
 
 
     public void onBackPressed() {
+        new AlertDialog.Builder(this).setIcon(android.R.drawable.ic_dialog_alert).setTitle("Exit")
+                .setMessage("Are you sure you want to exit?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                }).setNegativeButton("No", null).show();
+    }
 
+    public void setNext(TextView NextText ) {
+
+        SharedPreferences s1 = getSharedPreferences("Titel", MODE_PRIVATE);
+        SharedPreferences s3 = getSharedPreferences("realDate", MODE_PRIVATE);
+        String next = s1.getString("Titel", "-");
+        Long number = s3.getLong("realDate", 0);
+        SimpleDateFormat formatter5 = new SimpleDateFormat("HH:mm dd.MMM yyyy");
+        String formats1 = formatter5.format(number);
+        if (number.equals(0)||formats1.equals("01:00 01.Jan. 1970")||formats1.equals("0")){
+            NextText.setText(next);
+        }
+        else{
+            NextText.setText(next + "\n" + formats1);
+        }
     }
 }
 

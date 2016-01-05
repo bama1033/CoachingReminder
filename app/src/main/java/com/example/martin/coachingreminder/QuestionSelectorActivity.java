@@ -453,7 +453,20 @@ public class QuestionSelectorActivity extends AppCompatActivity {
     }
     private  void setprogress(String iteration){
         final TextView progress =(TextView) findViewById(R.id.textView20);
-        progress.setText("Reminder "+iteration+" of 5");
+
+        if (iteration.equals("4")){
+            progress.setText("Reminder 4 of 4");
+        }
+        if (iteration.equals("5")){
+            progress.setText("Reminder 4 of 5");
+        }
+        if (iteration.equals("6")){
+            progress.setText("Reminder 5 of 5");
+        }
+        else {
+            progress.setText("Reminder "+iteration+" of 5");
+        }
+
     }
     private void sintent(Context c) {
         Intent intent = new Intent(c, MobileMainActivity.class);
@@ -496,7 +509,9 @@ public class QuestionSelectorActivity extends AppCompatActivity {
         managealarm(realdate, intentAlarm);
         saved();
         sintent(getApplicationContext());
+        //new MobileMainActivity().setNext();
     }
+
     //clears lastnoti sds and disables receiver
     private  void clearsds(){
         final SharedPreferences s1 = getSharedPreferences("Titel", MODE_PRIVATE);
