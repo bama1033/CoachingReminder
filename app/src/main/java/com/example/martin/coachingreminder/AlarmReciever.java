@@ -92,7 +92,6 @@ public class AlarmReciever extends BroadcastReceiver {
                 RemoteInput remoteInput = new RemoteInput.Builder(MobileMainActivity.EXTRA_VOICE_REPLY)
                         .setLabel(question)
                         .setChoices(replyChoices)
-                                //um speak und Emojis als Antwort zu disablen .setAllowFreeFormInput(false)
                         .build();
 
                 PendingIntent PendingIntenta =

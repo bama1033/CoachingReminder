@@ -66,7 +66,7 @@ public class QuestionSelectorActivity extends AppCompatActivity {
                 ryes.setText(R.string.Good);
                 rno.setText(R.string.Bad);
 
-                final long realdatenew = realdate + 24 * 60 * 60 * 1000;
+                final long realdatenew = System.currentTimeMillis() + 24 * 60 * 60 * 1000;
 
                 question = "Could you implement the planned steps so far?";
 
@@ -101,11 +101,11 @@ public class QuestionSelectorActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         if (ryes.isChecked()) {
                             q1.edit().putString(sd, ryes.getText().toString()).apply();
-                            allmethods(intentAlarm, realdate);
+                            allmethods(intentAlarm, realdatenew);
                         }
                         if (rno.isChecked()) {
                             q1.edit().putString(sd, rno.getText().toString()).apply();
-                            allmethods(intentAlarm, realdate);
+                            allmethods(intentAlarm, realdatenew);
                         }
                     }
                 });
@@ -117,7 +117,7 @@ public class QuestionSelectorActivity extends AppCompatActivity {
                         q1.edit().putString(sd, reply).apply(); //oder commit();=====??? commit sendet result boolen zurück, ist aber unnötig
                         text.setText("Watch answer: ");
                         answerfield.setText(reply);
-                        allmethods(intentAlarm, realdate);
+                        allmethods(intentAlarm, realdatenew);
                     }
                 }
                 break;
@@ -162,20 +162,20 @@ public class QuestionSelectorActivity extends AppCompatActivity {
                         if (ryes.isChecked()) {
                             q2.edit().putString(sd, ryes.getText().toString()).apply();
                             //TODO aufein Tag reduziert q2
-                            final long realdatenew = realdate + 24 * 60 * 60 * 1000;
+                            final long realdatenew = System.currentTimeMillis() + 24 * 60 * 60 * 1000;
                             intentAlarm.putExtra("realDate", realdatenew);
                             intentAlarm.putExtra("Iteration", yiteration);
                             intentAlarm.putExtra("Question", question1);
-                            allmethods(intentAlarm, realdate);
+                            allmethods(intentAlarm, realdatenew);
                         }
                         if (rno.isChecked()) {
                             q2.edit().putString(sd, rno.getText().toString()).apply();
                             //TODO aufein Tag reduziert q2
-                            final long realdatenew = realdate + 24 * 60 * 60 * 1000;
+                            final long realdatenew = System.currentTimeMillis() + 24 * 60 * 60 * 1000;
                             intentAlarm.putExtra("realDate", realdatenew);
                             intentAlarm.putExtra("Iteration", yiteration);
                             intentAlarm.putExtra("Question", question1);
-                            allmethods(intentAlarm, realdate);
+                            allmethods(intentAlarm, realdatenew);
                         }
                     }
                 });
@@ -184,19 +184,21 @@ public class QuestionSelectorActivity extends AppCompatActivity {
                     Bundle remoteInput = RemoteInput.getResultsFromIntent(getIntent());
                     if (remoteInput != null) {
                         reply = remoteInput.getCharSequence(MobileMainActivity.EXTRA_VOICE_REPLY).toString();
-                        q2.edit().putString(sd, reply).apply(); //oder commit();=====??? commit sendet result boolen zurück, ist aber unnötig
+                        q2.edit().putString(sd, reply).apply();
                         save.setEnabled(false);
                         text.setText(R.string.WatchAnswer);
                         answerfield.setText(reply);
                         // if (reply.equals("yes") || reply.equals("Yes") || reply.equals("ja") || reply.equals("Ja")){
                         //TODO wird ja sofort gesendet, von daher nixhts ändern?  q2
-                        final long realdatenew = realdate + 24 * 60 * 60 * 1000;
+                        final long realdatenew = System.currentTimeMillis() + 24 * 60 * 60 * 1000;
                         intentAlarm.putExtra("realDate", realdatenew);
                         intentAlarm.putExtra("Iteration", yiteration);
                         intentAlarm.putExtra("Question", question1);
-                        managealarm(realdate, intentAlarm);
+                        managealarm(realdatenew, intentAlarm);
                         sintent(getApplicationContext());
+                        savesds(intentAlarm);
                         saved();
+
                         //  }
                   /*  if (reply.equals("no") || reply.equals("No") || reply.equals("Nein") || reply.equals("nein")){
                         final long realdatenew = realdate+ 3*60*60*1000;
@@ -248,21 +250,19 @@ public class QuestionSelectorActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         if (ryes.isChecked()) {
                             q3.edit().putString(sd, ryes.getText().toString()).apply();
-                            //TODO wird ja sofort gesendet, von daher nixhts ändern? Falsch komtm auf Antwort an q3
-                            final long realdatenew = realdate + 24 * 60 * 60 * 1000;
+                            final long realdatenew = System.currentTimeMillis() + 24 * 60 * 60 * 1000;
                             intentAlarm.putExtra("realDate", realdatenew);
                             intentAlarm.putExtra("Iteration", yiteration);
                             intentAlarm.putExtra("Question", question1);
-                            allmethods(intentAlarm, realdate);
+                            allmethods(intentAlarm, realdatenew);
                         }
                         if (rno.isChecked()) {
                             q3.edit().putString(sd, rno.getText().toString()).apply();
-                            //TODO wird ja sofort gesendet, von daher nixhts ändern? Falsch komtm auf Antwort an q3
-                            final long realdatenew = realdate + 24 * 60 * 60 * 1000;
+                            final long realdatenew = System.currentTimeMillis() + 24 * 60 * 60 * 1000;
                             intentAlarm.putExtra("realDate", realdatenew);
                             intentAlarm.putExtra("Iteration", niteration);
                             intentAlarm.putExtra("Question", question2);
-                            allmethods(intentAlarm, realdate);
+                            allmethods(intentAlarm, realdatenew);
                         }
                     }
                 });
@@ -278,19 +278,19 @@ public class QuestionSelectorActivity extends AppCompatActivity {
 
                         if (reply.equals("yes") || reply.equals("Yes") || reply.equals("ja") || reply.equals("Ja")) {
                             //TODO realdate mit new austauschen q3
-                            final long realdatenew = realdate + 24 * 60 * 60 * 1000;
+                            final long realdatenew = System.currentTimeMillis() + 24 * 60 * 60 * 1000;
                             intentAlarm.putExtra("realDate", realdatenew);
                             intentAlarm.putExtra("Iteration", yiteration);
                             intentAlarm.putExtra("Question", question1);
-                            allmethods(intentAlarm, realdate);
+                            allmethods(intentAlarm, realdatenew);
                         }
                         if (reply.equals("no") || reply.equals("No") || reply.equals("Nein") || reply.equals("nein")) {
                             //TODO realdate mit new austauschen 3
-                            final long realdatenew = realdate + 10 * 1000;
+                            final long realdatenew = System.currentTimeMillis() + 24 * 60 * 60 * 1000;
                             intentAlarm.putExtra("realDate", realdatenew);
                             intentAlarm.putExtra("Iteration", niteration);
                             intentAlarm.putExtra("Question", question2);
-                            allmethods(intentAlarm, realdate);
+                            allmethods(intentAlarm, realdatenew);
                         } else {
                             Toast.makeText(getApplicationContext(), "Please answer with yes or no", Toast.LENGTH_LONG).show();
                         }
@@ -327,7 +327,7 @@ public class QuestionSelectorActivity extends AppCompatActivity {
                     Bundle remoteInput = RemoteInput.getResultsFromIntent(getIntent());
                     if (remoteInput != null) {
                         reply = remoteInput.getCharSequence(MobileMainActivity.EXTRA_VOICE_REPLY).toString();
-                        q4.edit().putString(sd, reply).apply(); //oder commit();=====??? commit sendet result boolen zurück, ist aber unnötig
+                        q4.edit().putString(sd, reply).apply();
                         save.setEnabled(false);
                         text.setText(R.string.WatchAnswer);
                         answerfield.setText(reply);
@@ -345,9 +345,8 @@ public class QuestionSelectorActivity extends AppCompatActivity {
                 iteration = "6";
 
                 final SharedPreferences q5 = getSharedPreferences(sd, MODE_PRIVATE);
-
                 //TODO 1 Tage einf+ügen und mit realdate wechslen
-                final long realdatenew = realdate + 24 * 60 * 60 * 1000;
+                final long realdatenew = System.currentTimeMillis() + 24 * 60 * 60 * 1000;
 
                 question = "Would be another Peer-Coaching-session helpful?";
 
@@ -378,7 +377,7 @@ public class QuestionSelectorActivity extends AppCompatActivity {
                     Bundle remoteInput = RemoteInput.getResultsFromIntent(getIntent());
                     if (remoteInput != null) {
                         reply = remoteInput.getCharSequence(MobileMainActivity.EXTRA_VOICE_REPLY).toString();
-                        q5.edit().putString(sd, reply).apply(); //oder commit();=====??? commit sendet result boolen zurück, ist aber unnötig
+                        q5.edit().putString(sd, reply).apply();
                         save.setEnabled(false);
                         text.setText("Watch answer: ");
                         answerfield.setText(reply);

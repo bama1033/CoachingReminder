@@ -78,7 +78,7 @@ public class MobileMainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String x = SearchText.getText().toString();
-                populatelistview(x);
+                populateListView(x);
             }
         });
 
@@ -220,26 +220,22 @@ public class MobileMainActivity extends AppCompatActivity {
         new HelperClass().disableReceiver(getApplicationContext());
     }
 
-    private void populatelistview(String input) {
+    private void populateListView(String input) {
+        final ListView lv = (ListView) findViewById(R.id.listView);
 
         final Cursor cur;
         ContentResolver cr = getContentResolver();
         Uri uri = CalendarContract.Events.CONTENT_URI;
-
-        final ListView lv = (ListView) findViewById(R.id.listView);
-        //  String selection ;
         String selection = "(" + CalendarContract.Events.TITLE + " LIKE  ?)";
         String[] selectionArgs = new String[]{"%" + input + "%"};
         try {
             // Submit the query and get a Cursor object back.
             cur = cr.query(uri, null, selection, selectionArgs, CalendarContract.Events.DTSTART + " DESC");
-
             lv.setAdapter(new MyAdapter(getApplicationContext(), cur));
             int y = lv.getCount();
             if (y == 0) {
                 Toast.makeText(getApplicationContext(), "No events found", Toast.LENGTH_SHORT).show();
             }
-
         } catch (SecurityException e) {
             Toast.makeText(getApplicationContext(), "Permisson for Calendar not given?", Toast.LENGTH_LONG).show();
             Log.d("CHECK", "Permisson for Calendar not given?");

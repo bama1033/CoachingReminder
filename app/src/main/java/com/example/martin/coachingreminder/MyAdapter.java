@@ -18,7 +18,6 @@ import java.util.Date;
 public class MyAdapter extends CursorAdapter {
     private final LayoutInflater mInflater;
 
-
     public MyAdapter(Context context, Cursor cur) {
         super(context, cur, false);
         mInflater = LayoutInflater.from(context);
@@ -39,6 +38,5 @@ public class MyAdapter extends CursorAdapter {
         String formats1 = formatter5.format(event_Start);
         ((TextView) view.findViewById(R.id.textTitle)).setText(event_Title);
         ((TextView) view.findViewById(R.id.textDate)).setText(formats1);
-
     }
 }
